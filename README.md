@@ -1,35 +1,55 @@
-# Local RAG System
+# Learn RAG From Scratch
 
 ## Overview
 
-This project is a local Retrieval-Augmented Generation system built from scratch and then rebuilt with LangChain.
+This project is a learning-focused local Retrieval-Augmented Generation system built from scratch.
 
-It takes documents, splits them into chunks, embeds those chunks, retrieves relevant context for a user question, checks whether the retrieved context is strong enough, and then uses a local Ollama model to generate an answer grounded in the retrieved text.
+Each major RAG component is implemented manually first so the internals are visible before comparing the system with tools like Chroma, Ollama, LangChain, Graph-RAG, and Self-RAG.
 
-The project also includes retrieval evaluation, Chroma vector storage, query rewriting, reranking, Graph-RAG expansion, and a simple Self-RAG retry loop.
+The project takes documents, splits them into chunks, embeds those chunks, retrieves relevant context for a user question, checks whether the retrieved context is strong enough, and then uses a local Ollama model to generate an answer grounded in the retrieved text.
+
+It also includes retrieval evaluation, Chroma vector storage, query rewriting, multi-query retrieval, reranking, Graph-RAG expansion, a simple Self-RAG retry loop, comments for learners, and a learning guide.
+
+## Learning Guide
+
+This repo includes a [`LEARNING_GUIDE.md`](LEARNING_GUIDE.md) file for people who want to understand the project step by step.
+
+The guide explains:
+
+* what RAG is
+* how the pipeline works
+* what each major file does
+* how to read the code comments
+* debugging tips
+* examples of common issues
+* suggested learning paths through the codebase
+
+If you are learning RAG from the ground up, start with the learning guide first.
 
 ## Features
 
-- Document chunking with overlap
-- Local embeddings
-- Manual semantic search
-- Retriever evaluation
-- Chunk size and top-k experiments
-- JSON storage utilities
-- Chroma vector database support
-- RAG prompt construction
-- Query rewriting
-- Multi-query retrieval
-- Token-overlap reranking
-- Answerability gate
-- Local Ollama answering
-- End-to-end local RAG pipeline
-- RAG evaluation
-- LangChain rebuild
-- Entity extraction
-- Knowledge graph construction with NetworkX
-- Graph-RAG expansion
-- Self-RAG retry loop
+* Document chunking with overlap
+* Local embeddings
+* Manual semantic search
+* Retriever evaluation
+* Chunk size and top-k experiments
+* JSON storage utilities
+* Chroma vector database support
+* RAG prompt construction
+* Query rewriting
+* Multi-query retrieval
+* Token-overlap reranking
+* Answerability gate
+* Local Ollama answering
+* End-to-end local RAG pipeline
+* RAG evaluation
+* LangChain rebuild
+* Entity extraction
+* Knowledge graph construction with NetworkX
+* Graph-RAG expansion
+* Self-RAG retry loop
+* Automated tests
+* Learning-focused comments and examples
 
 ## Project Structure
 
@@ -96,7 +116,11 @@ Chunk overlap is used so important information is not lost at chunk boundaries.
 
 ### 2. Embeddings
 
-Each chunk is converted into an embedding vector. The query is also embedded, and semantic search compares the query vector to chunk vectors.
+Each chunk is converted into an embedding vector.
+
+The query is also embedded, and semantic search compares the query vector to chunk vectors.
+
+This makes retrieval semantic instead of only keyword-based.
 
 ### 3. Retrieval
 
@@ -122,8 +146,8 @@ Before calling the LLM, the system checks whether retrieved chunks are strong en
 
 It uses:
 
-- retrieval score
-- token overlap between question and chunk text
+* retrieval score
+* token overlap between question and chunk text
 
 If the evidence is weak, the system returns the fallback answer instead of forcing the model to answer.
 
@@ -219,17 +243,17 @@ The project includes retrieval and full RAG evaluation.
 
 Retrieval evaluation checks:
 
-- whether the expected document was retrieved
-- retrieval accuracy
-- false retrievals
-- failures
+* whether the expected document was retrieved
+* retrieval accuracy
+* false retrievals
+* failures
 
 RAG evaluation checks:
 
-- retrieval success
-- answerability prediction
-- whether an answer was produced
-- whether unanswerable questions correctly return the fallback answer
+* retrieval success
+* answerability prediction
+* whether an answer was produced
+* whether unanswerable questions correctly return the fallback answer
 
 Example summary metrics:
 
@@ -245,22 +269,46 @@ After building the system manually, the project rebuilds the basic RAG pipeline 
 
 LangChain components used:
 
-- `Document`
-- `RecursiveCharacterTextSplitter`
-- `Chroma`
-- `OllamaEmbeddings`
-- `OllamaLLM`
-- retriever wrapper
+* `Document`
+* `RecursiveCharacterTextSplitter`
+* `Chroma`
+* `OllamaEmbeddings`
+* `OllamaLLM`
+* retriever wrapper
 
 This shows how the manual pipeline maps to framework abstractions.
 
 ## Setup
 
+Clone the repository:
+
+```bash
+git clone https://github.com/acileee/learn-rag-from-scratch.git
+cd learn-rag-from-scratch
+```
+
+Create and activate a virtual environment:
+
+```bash
+python -m venv venv
+```
+
+On macOS/Linux:
+
+```bash
+source venv/bin/activate
+```
+
+On Windows:
+
+```bash
+venv\Scripts\activate
+```
+
 Install dependencies:
 
 ```bash
-pip install chromadb networkx requests
-pip install langchain langchain-community langchain-chroma langchain-ollama
+pip install -r requirements.txt
 ```
 
 Install Ollama models:
@@ -270,10 +318,16 @@ ollama pull llama3.2:1b
 ollama pull nomic-embed-text
 ```
 
-Run Ollama locally:
+Start Ollama:
 
 ```bash
-ollama run llama3.2:1b
+ollama serve
+```
+
+In another terminal, run the project:
+
+```bash
+python src/end_to_end_rag.py
 ```
 
 ## Example Usage
@@ -306,42 +360,61 @@ result = answer_from_documents(
 
 print(result["answer"])
 ```
+
 ## Debugging Tips
 
-For detailed debugging tips and step-by-step checks, please see the `LEARNING_GUIDE.md` file.
+For detailed debugging tips and step-by-step checks, please see the [`LEARNING_GUIDE.md`](LEARNING_GUIDE.md) file.
 
-It includes guidance for checking Ollama, installed models, retrieval issues, embeddings, Chroma behavior, and common setup problems.
+It includes guidance for:
+
+* checking Ollama
+* checking installed models
+* debugging embeddings
+* diagnosing retrieval issues
+* understanding Chroma behavior
+* debugging answerability checks
+* inspecting prompts
+* reading evaluation results
+* understanding common setup problems
 
 ## Limitations
 
-- Entity extraction is rule-based and simple.
-- Relationship extraction is based on co-occurrence, not true semantic relations.
-- Answerability checking is heuristic.
-- Reranking uses token overlap, not a trained cross-encoder.
-- Graph-RAG expansion can add noisy chunks.
-- Evaluation data is small and manually defined.
-- Local answer quality depends on the Ollama model used.
-- Chroma scores and manual semantic scores may not be perfectly comparable.
+* Entity extraction is rule-based and simple.
+* Relationship extraction is based on co-occurrence, not true semantic relations.
+* Answerability checking is heuristic.
+* Reranking uses token overlap, not a trained cross-encoder.
+* Graph-RAG expansion can add noisy chunks.
+* Evaluation data is small and manually defined.
+* Local answer quality depends on the Ollama model used.
+* Chroma scores and manual semantic scores may not be perfectly comparable.
 
 ## Future Improvements
 
-- Add hybrid BM25 + vector search.
-- Use a stronger embedding model.
-- Add a cross-encoder reranker.
-- Use LLM-based entity and relation extraction.
-- Add citations to generated answers.
-- Add a FastAPI endpoint.
-- Add unit tests.
-- Add a CLI for indexing and querying documents.
-- Add better evaluation datasets.
-- Add streaming responses from Ollama.
-- Add document upload support.
+* Add hybrid BM25 + vector search.
+* Use a stronger embedding model.
+* Add a cross-encoder reranker.
+* Use LLM-based entity and relation extraction.
+* Add citations to generated answers.
+* Add a FastAPI endpoint.
+* Add a CLI for indexing and querying documents.
+* Add better evaluation datasets.
+* Expand the test suite.
+* Add streaming responses from Ollama.
+* Add document upload support.
 
 ## Learning Process
 
-This project was built as a hands-on learning project, not from a copied template. I implemented each major RAG component manually first so I could understand how the pipeline works under the hood before comparing it with tools like Chroma, Ollama, and LangChain.
+This project was built as a hands-on learning project, not from a copied template.
 
-AI tools were used as a learning assistant during the process: to clarify concepts, support debugging, add explanatory comments, help create tests, and refine documentation. The core implementation was built, reviewed, and tested step by step as part of the learning process.
+I implemented each major RAG component manually first so I could understand how the pipeline works under the hood before comparing it with tools like Chroma, Ollama, and LangChain.
+
+AI tools were used as a learning assistant during the process: to clarify concepts, support debugging, add explanatory comments, help create tests, and refine documentation.
+
+The core implementation was built, reviewed, and tested step by step as part of the learning process.
+
+## Using This Repo
+
+If this repo helps you learn RAG or if you use it as a reference for your own project, please consider linking back to it so more people can find it and learn from it too.
 
 ## To Summarize
 
@@ -358,7 +431,3 @@ chunking
 ```
 
 It also compares manual RAG implementation with LangChain and extends the system with graph-based retrieval and a Self-RAG retry loop.
-
-## Using This Repo
-
-If this repo helps you learn RAG or if you use it as a reference for your own project, please consider linking back to it so more people can find it and learn from it too.
