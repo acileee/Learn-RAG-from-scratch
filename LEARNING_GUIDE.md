@@ -1545,7 +1545,7 @@ then inspect the generated answer and prompt.
 
 ## Best Debugging Habit
 
-As a learner, do not ask only:
+When learning, do not ask only:
 
 ```text
 Why is the final answer wrong?
