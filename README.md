@@ -358,3 +358,7 @@ chunking
 ```
 
 It also compares manual RAG implementation with LangChain and extends the system with graph-based retrieval and a Self-RAG retry loop.
+
+## Using This Repo
+
+If this repo helps you learn RAG or if you use it as a reference for your own project, please consider linking back to it so more people can find it and learn from it too.
