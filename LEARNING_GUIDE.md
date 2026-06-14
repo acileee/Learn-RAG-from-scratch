@@ -791,16 +791,25 @@ Check:
 
 ## How to Read the Comments
 
-The code includes explanatory comments to make the project easier to learn from.
+The code includes learning-focused comments to make the project easier to follow for people learning RAG from the ground up.
+
+The comments are organized around four labels:
+
+- **WHAT:** what the function or code block does
+- **WHY:** why this step exists in the RAG pipeline
+- **HOW:** how the logic works step by step
+- **EXAMPLE:** a concrete example of how the function or concept is used
 
 Pay attention to comments that explain:
 
-* why a step exists
-* what problem it solves
-* what the input and output look like
-* how the component fits into the full RAG pipeline
+- why a step exists
+- what problem it solves
+- what the input and output look like
+- how the component fits into the full RAG pipeline
 
-Good RAG learning is not just knowing what each line does. It is understanding why each step exists.
+These comments are meant to make the code easier to follow for people learning RAG from the ground up. The goal is not only to show working code, but also to explain the reasoning behind each component.
+
+The goal is that you do not just know what the code does, but also understand why each step exists and how the pieces connect.
 
 ## Contributing
 
