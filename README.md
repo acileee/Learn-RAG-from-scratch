@@ -306,6 +306,11 @@ result = answer_from_documents(
 
 print(result["answer"])
 ```
+## Debugging Tips
+
+For detailed debugging tips and step-by-step checks, please see the `LEARNING_GUIDE.md` file.
+
+It includes guidance for checking Ollama, installed models, retrieval issues, embeddings, Chroma behavior, and common setup problems.
 
 ## Limitations
 
